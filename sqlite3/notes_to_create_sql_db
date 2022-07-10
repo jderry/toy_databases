@@ -1,0 +1,20 @@
+# create the database
+sqlite3 mlb.db
+
+# python --- requires installation of pandas
+import sqlite3
+import pandas as pd
+
+# read text file into pandas dataframe
+mlb = pd.read_csv('MLB.txt', sep='\t')
+
+# create the connector to the database
+conn = sqlite3.connect('mlb.db')
+c = conn.cursor()
+
+# create the table
+c.execute('CREATE TABLE IF NOT EXISTS mlb ("Index" Integer Primary Key, "Name" Text, "Team" Text, "Position" Text, "Height" Integer, "Weight" Integer, "Age" Number)')
+conn.commit()
+
+# read the dataframe records into the table
+mlb.to_sql('mlb', con=conn, if_exists='replace')
